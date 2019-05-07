@@ -1,7 +1,5 @@
 export default class Point {
-
-    constructor(coordinates) {
-        this.coordinates = coordinates;
-    }
-
+	constructor(coordinates) {
+		this.coordinates = coordinates;
+	}
 }

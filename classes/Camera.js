@@ -1,9 +1,5 @@
 export default class Camera {
-
-    constructor(direction) {
-
-        this.directionVector = direction;
-
-    }
-
+	constructor(direction) {
+		this.directionVector = direction;
+	}
 }
