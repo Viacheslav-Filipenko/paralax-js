@@ -1,50 +1,26 @@
 export default class Matrix3D {
-    getWorldMatrix(viewMatrix, worldMatrix) {
-        return math.multiply(viewMatrix, worldMatrix);
-    }
-
-
-    getPrimaryMatrix() {
-
-        return math.matrix([
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ]);
-
-
-    }
+    constructor() {}
 
     getScaleMatrix(vector) {
-
-            return math.matrix([
-                [vector.x, 0, 0, 0],
-                [0, vector.y, 0, 0],
-                [0, 0, vector.z, 0],
-                [0, 0, 0, 1]
-            ]);
+        return math.matrix([
+            [vector.x, 0, 0, 0],
+            [0, vector.y, 0, 0],
+            [0, 0, vector.z, 0],
+            [0, 0, 0, 1]
+        ]);
     }
 
-    getCSS(matrix) {
+    getStylesOf(matrix) {
+        if (Array.isArray(matrix)) {
+            matrix = this.multiply(matrix);
+        }
 
-        const limit = matrix.size()[1];
-
-        let result = ''
-
-
+        let result = "";
         matrix.forEach((value, index) => {
-
-            result += `${value},`    
-
-            // else  {
-            //     result += ` ${value}\n`
-            // }
-
+            result += `${value},`;
         });
 
         return result.slice(0, -1);
-
     }
 
     getTranslationMatrix(vector) {
@@ -61,6 +37,10 @@ export default class Matrix3D {
             ]);
         }
         return null;
+    }
+
+    getCSSOfMultiplication(matrix) {
+        return this.getCSS(this.multiply(matrix));
     }
 
     getTransfomationMatrix(
@@ -91,8 +71,17 @@ export default class Matrix3D {
         ]);
     }
 
-    getRotationMatrix(axis, angle) {
+    multiply(matrix) {
+        let result = matrix[0];
+        matrix.splice(0, 1);
+        matrix.forEach(m => {
+            result = math.multiply(result, m);
+        });
 
+        return result;
+    }
+
+    getRotationMatrix(axis, angle) {
         angle = angle * (Math.PI / 180);
 
         if (axis.toLowerCase() === "x") {

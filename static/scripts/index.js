@@ -1,19 +1,22 @@
 import Matrix3D from "../../classes/Matrix3D.js";
+import Space from '../../classes/Space.js';
+import Camera from '../../classes/Camera.js';
+import Rectangle from '../../classes/Rectangle.js';
+import { setStyles } from '../scripts/utils/styles.js'; 
 
 const matrix = new Matrix3D();
 
+const rectangle = new Rectangle({position: {}, size: {
+    
+}});
+
+const Objects3D = [];
+
 const background = document.createElement('div');
 
+const test = matrix.getTranslationMatrix({x: 900, y: 1, z: 1})
+const rotated = matrix.getRotationMatrix('z', 0);
 
-const setStyles = (element, styles) => {
-
-    Object.keys(styles).forEach(style => {
-        element.style[style] = styles[style];
-    });
-} 
-
-const test = matrix.getTranslationMatrix({x: 1, y: 1, z: 0})
-const rotated = matrix.getRotationMatrix('z', 45);
 setStyles(background, {
     width: '100vw',
     height: '100vh',
@@ -30,7 +33,7 @@ setStyles(rectengle, {
     height: '100px',
     backgroundColor: 'white',
     position: 'absolute',
-    transform: `matrix3d(${matrix.getCSS(math.multiply(test, rotated))})`
+    transform: `matrix3d(${matrix.getStylesOf([test, rotated])})`
 })
 
 background.appendChild(rectengle);
