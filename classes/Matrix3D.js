@@ -28,22 +28,6 @@ export default class Matrix3D {
         return null;
     }
 
-    // validateObjectPropeties(obj, properties) {
-
-    //     try {
-    //         properties.forEach(property => {
-    //             const index = Object.keys(obj).indexOf(property);
-    //             if (index === -1) throw BreakException;
-    //         });
-    //         return true;
-
-    //     } catch (error) {
-    //         if (error !== BreakException) {
-    //             throw error;
-    //         }
-    //         return false;
-    //     }
-    // }
 
     getTransfomationMatrix(transformXAxis, transformYAxis, transformZAxis, translation) {
 
