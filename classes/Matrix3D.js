@@ -1,3 +1,5 @@
+import { toRadians } from "../static/scripts/utils/Math.js";
+
 export default class Matrix3D {
     constructor() {}
 
@@ -23,7 +25,7 @@ export default class Matrix3D {
         return result.slice(0, -1);
     }
 
-    getTranslationMatrix(vector) {
+    getTranslationMatrix(vector = {}) {
         if (
             vector.hasOwnProperty("x") &&
             vector.hasOwnProperty("y") &&
@@ -33,14 +35,10 @@ export default class Matrix3D {
                 [1, 0, 0, 0],
                 [0, 1, 0, 0],
                 [0, 0, 1, 0],
-                [vector.x, vector.y, 0, vector.z]
+                [vector.x, vector.y, vector.z, 1]
             ]);
         }
         return null;
-    }
-
-    getCSSOfMultiplication(matrix) {
-        return this.getCSS(this.multiply(matrix));
     }
 
     getTransfomationMatrix(
@@ -57,20 +55,6 @@ export default class Matrix3D {
         ]);
     }
 
-    getPerspectiveProjection(FOV, near, far) {
-        return math.matrix([
-            [Math.pow(Math.tan(FOV.x / 2), -1), 0, 0, 0],
-            [0, Math.pow(Math.tan(FOV.y / 2), -1), 0, 0],
-            [
-                0,
-                0,
-                -1 * ((far.z + near.z) / (far.z - near.z)),
-                -2 * ((far.z * near.z) / (far.z - near.z))
-            ],
-            [0, 0, -1, 0]
-        ]);
-    }
-
     multiply(matrix) {
         let result = matrix[0];
         matrix.splice(0, 1);
@@ -82,7 +66,7 @@ export default class Matrix3D {
     }
 
     getRotationMatrix(axis, angle) {
-        angle = angle * (Math.PI / 180);
+        angle = toRadians(angle);
 
         if (axis.toLowerCase() === "x") {
             return math.matrix([

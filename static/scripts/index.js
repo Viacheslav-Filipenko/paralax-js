@@ -1,43 +1,38 @@
-import Matrix3D from "../../classes/Matrix3D.js";
 import Space from '../../classes/Space.js';
 import Camera from '../../classes/Camera.js';
 import Rectangle from '../../classes/Rectangle.js';
-import { setStyles } from '../scripts/utils/styles.js'; 
+import Scene from '../../classes/Scene.js';
 
-const matrix = new Matrix3D();
 
-const rectangle = new Rectangle({position: {}, size: {
-    
-}});
+const scene = new Scene({position: {x: 100, y: 0, z: 0}});
 
-const Objects3D = [];
-
-const background = document.createElement('div');
-
-const test = matrix.getTranslationMatrix({x: 900, y: 1, z: 1})
-const rotated = matrix.getRotationMatrix('z', 0);
-
-setStyles(background, {
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'black'
+const camera = new Camera({
+    position: {x: 0, y: 0, z: 0}
 });
 
 
-const rectengle = document.createElement('div');
+const b = new Rectangle({
+    position: {x: 100, y: 0, z: -100}, 
+    properties: {
+    width: '200px',
+    height: '200px'
+    }
+});
 
-rectengle.innerHTML = "some text";
+const a = new Rectangle({position: {x: 200, y: 0, z: -200}, properties: {
+    width: '400px',
+    height: '400px'
+}});
 
-setStyles(rectengle, {
-    width: '100px',
-    height: '100px',
-    backgroundColor: 'white',
-    position: 'absolute',
-    transform: `matrix3d(${matrix.getStylesOf([test, rotated])})`
-})
+scene.add([a, b]);
 
-background.appendChild(rectengle);
+const body = document.querySelector('body');
 
-document.querySelector('body').appendChild(background)
+
+
+
+const space = new Space(camera, scene); 
+
+space.init(body);
 
 
