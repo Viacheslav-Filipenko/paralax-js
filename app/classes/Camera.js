@@ -1,35 +1,31 @@
-import Object3D from "../classes/Object3D.js";
-import  { toRadians } from "../utils/Math.js";
+import { toRadians, checkInfinity } from "../utils/Math.js";
+import Object3D from "./Object3D.js";
+import Graphic from "./Graphic.js";
+import Matrix from './Matrix.js';
 
-
-export default class Camera extends Object3D {
-   
+export default class Camera {
     constructor(obj) {
-        super(obj.position);
+        this.position = obj.position;
         this.fov = obj.fov;
         this.aspectRatio = obj.aspectRatio;
         this.near = obj.near;
+        this.graphic = new Graphic();
         this.far = obj.far;
+        this.rotation = { x: 0, y: 0, z: 0 };
+        this.matrixService = new Matrix;
     }
 
-    projection() {
-        const S = 1 / Math.tan(toRadians(this.fov / 2));
+    
 
-        return math.matrix([
-            [S, 0, 0, 0],
-            [0, S, 0, 0],
-            [0, 0, (-1 * this.far) / (this.far - this.near), -1],
-            [0, 0, (-1 * this.far * this.near) / (this.far - this.near), 0]
-        ]);
+    view(matrix) {
+        Object.keys(this.rotation).forEach(axios => {
+            const angle = this.rotation[axios];
+
+            matrix = this.graphic.rotate(matrix, { axios, angle });
+        });
+
+        // matrix = this.graphic.translate(matrix, this.position);
+        return this.graphic.project(matrix, this.position);
+
     }
-
-    // view() {
-    //     return math.matrix([
-    //         [S, 0, 0, 0],
-    //         [0, S, 0, 0],
-    //         [0, 0, (-1 * this.far) / (this.far - this.near), -1],
-    //         [0, 0, 0, 1]
-    //     ]);
-    // }
-
 }
