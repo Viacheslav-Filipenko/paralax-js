@@ -1,5 +1,6 @@
 import Object3D from "../classes/Object3D.js";
-import  { toRadians } from "../static/scripts/utils/Math.js";
+import  { toRadians } from "../utils/Math.js";
+
 
 export default class Camera extends Object3D {
    
@@ -22,8 +23,13 @@ export default class Camera extends Object3D {
         ]);
     }
 
-    view() {
-
-    }
+    // view() {
+    //     return math.matrix([
+    //         [S, 0, 0, 0],
+    //         [0, S, 0, 0],
+    //         [0, 0, (-1 * this.far) / (this.far - this.near), -1],
+    //         [0, 0, 0, 1]
+    //     ]);
+    // }
 
 }

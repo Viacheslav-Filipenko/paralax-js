@@ -1,6 +1,6 @@
-import { toRadians } from "../static/scripts/utils/Math.js";
+import { toRadians } from "../utils/Math.js";
 
-export default class Matrix3D {
+export default class Matrix {
     constructor() {}
 
     getScaleMatrix(vector) {
@@ -15,30 +15,23 @@ export default class Matrix3D {
     getStylesOf(matrix) {
         if (Array.isArray(matrix)) {
             matrix = this.multiply(matrix);
+        } else {
+            let result = "";
+            matrix.forEach(value => {
+                result += `${value},`;
+            });
+
+            return result.slice(0, -1);
         }
-
-        let result = "";
-        matrix.forEach((value, index) => {
-            result += `${value},`;
-        });
-
-        return result.slice(0, -1);
     }
 
     getTranslationMatrix(vector = {}) {
-        if (
-            vector.hasOwnProperty("x") &&
-            vector.hasOwnProperty("y") &&
-            vector.hasOwnProperty("z")
-        ) {
-            return math.matrix([
-                [1, 0, 0, 0],
-                [0, 1, 0, 0],
-                [0, 0, 1, 0],
-                [vector.x, vector.y, vector.z, 1]
-            ]);
-        }
-        return null;
+        return math.matrix([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [vector.x, vector.y, vector.z, 1]
+        ]);
     }
 
     getTransfomationMatrix(
@@ -55,7 +48,7 @@ export default class Matrix3D {
         ]);
     }
 
-    multiply(matrix) {
+    multiply(...matrix) {
         let result = matrix[0];
         matrix.splice(0, 1);
         matrix.forEach(m => {

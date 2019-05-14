@@ -7,9 +7,13 @@ export default class Scene extends Object3D {
         this.models = [];
     }
 
-    add(model) {
+    add(...model) {
+        
         if (Array.isArray(model)) {
             model.forEach(item => {
+                item.position.x += this.position.x;
+                item.position.y += this.position.y;
+                item.position.z += this.position.z;
                 this.models.push(item);
             });
         } else {
