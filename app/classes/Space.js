@@ -1,148 +1,114 @@
-import Matrix from "./Matrix.js";
-import Render from "./Render.js";
-import Graphic from "./Graphic.js";
-import { toRadians } from '../utils/Math.js';
+import Render from './Render.js';
+import Graphic from './Graphic.js';
 
 export default class Space {
-    constructor(camera, scene) {
-        this.scene = scene;
-        this.camera = camera;
-        this.matrixService = new Matrix();
-        this.graphic = new Graphic();
-        this.renderer = new Render();
-        this.rendered = [];
-        this.rotation = 0;
-    }
+	constructor(scene) {
+		this.scene = scene;
+		this.camera = null;
+		this.graphic = new Graphic();
+		this.renderer = new Render();
+		this.rendered = [];
+	}
 
-    init(parent) {
-        const scene = this.renderer.render("div", {
-            overflow: "hidden",
-            position: "relative",
-            backgroundColor: "black",
-            width: "100vw",
-            height: "100vh",
-            perspective: `${this.camera.far}px`,
-            perspectiveOrigin: "center"
-        });
+	initCanvas(canvas) {
+		this.renderer.perspetive = 50;
 
-        this.scene.models.forEach(model => {
-            const element = this.renderer.render("div", {
-                ...model.properties
-            });
-          
-            // model.matrix = this.graphic.rotate(model.matrix, {
-            //     axios: "y",
-            //     angle: -this.camera.fov
-            // });
-          
-            // model.matrix = this.graphic.rotate(model.matrix, {
-            //     axios: "x",
-            //     angle: -this.camera.fov
-            // });
+		const context = canvas.getContext('2d');
 
-            model.matrix = this.graphic.translate(model.matrix, model.position);
+		this.renderer.drawRectangle(context, this.scene.models);
 
-            const matrix = this.camera.view(model.matrix)
-          
-            this.renderer.renderHTML(element, matrix);
-            element.classList.add("black");
-            scene.appendChild(element);
-            this.rendered.push(element);
-        });
+		// this.keyup(canvas, this.scene.models);
+		// this.keydown(canvas, this.scene.models);
+	}
 
-        parent.appendChild(scene);
-        this.mouseWheelINIT(this.scene.models);
-    }
+	init(parent) {
+		const scene = this.renderer.html.render('div', {
+			overflow: 'hidden',
+			position: 'relative',
+			backgroundColor: 'black',
+			width: '400px',
+			height: '300px',
+			perspective: `${100}px`,
+			perspectiveOrigin: '0%, 0%'
+		});
 
+		this.scene.models.forEach(model => {
+			const element = this.renderer.html.render('div', { ...model.properties });
 
-    keydown() {
+			model.matrix = this.graphic.rotate(model.matrix, model.rotation);
+			model.matrix = this.graphic.translate(model.matrix, model.position);
 
-        document.addEventListener('keydown', (event) => {
-        
-      
-            if (event.which !== 38) return ;
-            
-            const counter = 50;
+			this.renderer.renderHTML(element, model.matrix);
+			element.classList.add('grey');
+			scene.appendChild(element);
+			this.rendered.push(element);
+		});
 
-            this.camera.position.z += counter;
-   
-        })
+		parent.appendChild(scene);
+	}
 
-    }
+	keydown(canvas, models) {
+		document.addEventListener('keydown', event => {
+			if (event.which !== 38) return;
 
-    keyup() {
-        document.addEventListener('keydown', (event) => {
-        
-            if (event.which !== 40) return ;
-            const counter = -50;
+			const counter = 10;
 
-            this.camera.position.z += counter;
+			models.forEach(model => {
+				model.position.z += counter;
+				console.log(model.position.z);
+			});
 
-        })
-    }
+			this.renderer.renderCanvas(canvas, models);
+		});
+	}
 
-    keyRight() {
-        document.addEventListener('keydown', (event) => {
-        
-            if (event.which !== 39) return ;
-            let angle = -10;
-            this.camera.rotation.y += angle;
-        
-        })
-    }
+	keyup(canvas, models) {
+		document.addEventListener('keydown', event => {
+			if (event.which !== 40) return;
+			const counter = -10;
 
-    keyLeft() {
-        document.addEventListener('keydown', (event) => {
-        
-            if (event.which !== 37) return ;
-            let angle = 10;
-            this.camera.rotation.y += angle;
-        
-        })
-    }
+			models.forEach(model => {
+				model.position.z += counter;
+			});
+			this.renderer.renderCanvas(canvas, models);
+		});
+	}
 
+	keyRight() {
+		document.addEventListener('keydown', event => {
+			if (event.which !== 39) return;
+			let angle = -10;
+			this.camera.rotation.y += angle;
+		});
+	}
 
-    mouseWheelINIT(models) {
+	keyLeft() {
+		document.addEventListener('keydown', event => {
+			if (event.which !== 37) return;
+			let angle = 10;
+			this.camera.rotation.y += angle;
+		});
+	}
 
+	mouseWheelINIT(models) {
+		this.keyLeft(models);
+		this.keyRight(models);
+		this.keyup(models);
+		this.keydown(models);
 
-        this.keyLeft();
-        this.keyRight();
-        this.keyup();
-        this.keydown();
+		setInterval(() => {
+			this.moveModelsHTML(0, models);
+		}, 500);
 
-        setInterval(()=> {
-            this.moveModelsHTML(0, models);
-        }, 500);
-        
+		document.addEventListener('mousewheel', () => {
+			const counter = event.wheelDelta > 0 ? -100 : 100;
+			this.moveModelsHTML(counter, models);
+		});
+	}
 
-
-        document.addEventListener("mousewheel", () => {
-            const counter = event.wheelDelta > 0 ? -100 : 100;
-            this.moveModelsHTML(counter, models);
-        });
-    }
-
-    moveModelsHTML(number, models) {
-        models.forEach((model, index) => {
-            // console.log(model.rotation);
-
-            // const rotate = model.rotation.y < 90 ? 1 : 0;
-            // model.rotation.y += rotate ? 1 : 0;
-
-            //     model.matrix = this.graphic.rotate(model.matrix, {
-            //         axios: "y",
-            //         angle: rotate
-            //     });
-
-            // model.matrix = this.graphic.translate(model.matrix, {
-            //     x: 0,
-            //     y: 0,
-            //     z: number
-            // });
-
-            const matrix = this.camera.view(model.matrix);
-
-            this.renderer.renderHTML(this.rendered[index], matrix);
-        });
-    }
+	moveModelsHTML(number, models) {
+		models.forEach((model, index) => {
+			this.renderer.renderHTML(this.rendered[index], model.matrix);
+		});
+	}
 }

@@ -1,23 +1,18 @@
-body, html {
+body {
+    overflow: hidden;
     margin: 0;
     padding: 0;
-    background-color: black;
-    z-index: 0;
 }
 
-.camera {
-    background-color: white;
-    z-index: -1;
-}
-
-.scene {
-    
+#scene {
+    width: 100vw;
+    height: 100vh;
 }
 
 .black {
-    background-color: rgb(85, 85, 85);
+    background-color: black;
 }
 
-.green {
-    background-color: rgb(23, 107, 23);
+.grey {
+    background-color: gray;
 }
