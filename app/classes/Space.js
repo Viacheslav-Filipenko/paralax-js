@@ -7,18 +7,6 @@ export default class Space {
 		this.camera = null;
 		this.graphic = new Graphic();
 		this.renderer = new Render();
-		this.rendered = [];
-	}
-
-	initCanvas(canvas) {
-		this.renderer.perspetive = 50;
-
-		const context = canvas.getContext('2d');
-
-		this.renderer.drawRectangle(context, this.scene.models);
-
-		// this.keyup(canvas, this.scene.models);
-		// this.keydown(canvas, this.scene.models);
 	}
 
 	init(parent) {
@@ -35,13 +23,15 @@ export default class Space {
 		this.scene.models.forEach(model => {
 			const element = this.renderer.html.render('div', { ...model.properties });
 
-			model.matrix = this.graphic.rotate(model.matrix, model.rotation);
-			model.matrix = this.graphic.translate(model.matrix, model.position);
+			model.matrix = this.graphic.getMVP(model, this.scene);
 
-			this.renderer.renderHTML(element, model.matrix);
+			this.renderer.html.setStyles(element, {
+				transform: `matrix3d(${this.renderer.html.getStylesOfMatrix(model.matrix)})`
+			});
+
 			element.classList.add('grey');
+			this.renderer.elements.push(element);
 			scene.appendChild(element);
-			this.rendered.push(element);
 		});
 
 		parent.appendChild(scene);
@@ -96,19 +86,9 @@ export default class Space {
 		this.keyup(models);
 		this.keydown(models);
 
-		setInterval(() => {
-			this.moveModelsHTML(0, models);
-		}, 500);
-
 		document.addEventListener('mousewheel', () => {
 			const counter = event.wheelDelta > 0 ? -100 : 100;
 			this.moveModelsHTML(counter, models);
-		});
-	}
-
-	moveModelsHTML(number, models) {
-		models.forEach((model, index) => {
-			this.renderer.renderHTML(this.rendered[index], model.matrix);
 		});
 	}
 }

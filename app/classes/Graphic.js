@@ -7,8 +7,8 @@ export default class Graphic {
 	}
 
 	scale(matrix, vector) {
-		const slaceMatrix = this.matrixService.getScaleMatrix(vector);
-		return this.matrixService.multiply(matrix, slaceMatrix);
+		const scaleMatrix = this.matrixService.getScaleMatrix(vector);
+		return this.matrixService.multiply(matrix, scaleMatrix);
 	}
 
 	rotate(matrix, rotation = {}) {
@@ -41,8 +41,28 @@ export default class Graphic {
 		return this.matrixService.multiply(matrix, projectionMatrix);
 	}
 
-	// getMVP(camera, matrix) {
+	getMVP(model, scene) {
+		model.matrix = this.rotate(model.matrix, model.rotation);
+		model.matrix = this.translate(model.matrix, model.position);
+		const sceneMatrix = this.translate(scene.matrix, scene.position);
+		model.matrix = this.matrixService.multiply(model.matrix, sceneMatrix);
 
-	//     return this.matrixService.multiply(matrix, camera.projection());
+		return model.matrix;
+	}
+
+	// getProjectionCanvas(position) {
+	// 	const projection = {};
+
+	// 	projection.scale = this.perspetive / (this.perspetive + position.z);
+
+	// 	console.log(projection.scale);
+
+	// 	this.projectionCenterX = this.width / 2;
+	// 	this.projectionCenterY = this.height / 2;
+
+	// 	projection.x = position.x * projection.scale + this.projectionCenterX;
+	// 	projection.y = position.y * projection.scale + this.projectionCenterY;
+
+	// 	return projection;
 	// }
 }

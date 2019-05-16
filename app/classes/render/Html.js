@@ -15,11 +15,6 @@ export default class Html {
 		});
 	}
 
-	// setStyle(element, style, value) {
-	// 	const updatedMatrix = this.matrixService.getStylesOf(matrix);
-	// 	setStyles(element, { transform: `matrix3d(${updatedMatrix})` });
-	// }
-
 	render(type, styles) {
 		const element = document.createElement(type);
 		this.setStyles(element, styles);

@@ -20,8 +20,8 @@ const scene = new Scene({
 
 const a = new Rectangle({
 	transformation: {
-		position: { x: 200, y: 100, z: 0 },
-		rotation: { z: 45 }
+		position: { x: 100, y: 100, z: -500 },
+		rotation: { z: 0 }
 	},
 	properties: {
 		width: '100px',
