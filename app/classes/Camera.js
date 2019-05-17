@@ -1,25 +1,40 @@
 import Graphic from './Graphic.js';
-import Matrix from './Matrix.js';
+import Vector from './Vector.js';
 
 export default class Camera {
 	constructor(obj) {
-		this.position = obj.position;
-		this.fov = obj.fov;
-		this.aspectRatio = obj.aspectRatio;
-		this.near = obj.near;
+		this.position = new Vector(obj.position, 0);
+		this.rotation = new Vector(obj.rotation, 0);
+		this.scale = new Vector({}, 1);
+
+		this.top = obj.top;
+		this.bottom = obj.bottom;
+		this.left = obj.left;
+		this.right = obj.right;
+
+		this.props = obj.props;
+
 		this.graphic = new Graphic();
-		this.far = obj.far;
-		this.rotation = { x: 0, y: 0, z: 0 };
-		this.matrixService = new Matrix();
+
+		this.near = obj.near || 1;
+		this.far = obj.far || 10;
+
+		this._matrix = this.graphic.trasformation(this.graphic.primary(), this);
+		this._projectionMatrix = this.graphic.project(this.graphic.primary(), this);
 	}
 
-	view(matrix) {
-		Object.keys(this.rotation).forEach(axios => {
-			const angle = this.rotation[axios];
-
-			matrix = this.graphic.rotate(matrix, { axios, angle });
-		});
-
-		return this.graphic.project(matrix, this.position);
+	get matrix() {
+		return this._matrix;
 	}
+
+	get projectionMatrix() {
+		return this._projectionMatrix;
+	}
+
+	// project() {
+	// 	this.projectionMatrix = this.graphic.project(this.projectionMatrix, this);
+	// }
+	// view() {
+	// 	this.graphic.trasformation(this);
+	// }
 }

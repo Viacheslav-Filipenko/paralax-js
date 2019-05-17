@@ -1,9 +1,12 @@
 import Matrix from './Matrix.js';
-import { checkInfinity } from '../utils/Math.js';
 
 export default class Graphic {
 	constructor() {
 		this.matrixService = new Matrix();
+	}
+
+	primary() {
+		return this.matrixService.getPrimaryMatrix();
 	}
 
 	scale(matrix, vector) {
@@ -11,13 +14,11 @@ export default class Graphic {
 		return this.matrixService.multiply(matrix, scaleMatrix);
 	}
 
-	rotate(matrix, rotation = {}) {
+	rotate(matrix, rotation) {
 		Object.keys(rotation).forEach(axios => {
 			const rotationMatrix = this.matrixService.getRotationMatrix(axios, rotation[axios]);
-
 			matrix = this.matrixService.multiply(matrix, rotationMatrix);
 		});
-
 		return matrix;
 	}
 
@@ -26,28 +27,41 @@ export default class Graphic {
 		return this.matrixService.multiply(matrix, translationMatrix);
 	}
 
-	project(matrix, cameraPosition) {
-		const p = checkInfinity(1 / cameraPosition.x) ? 0 : 1 / cameraPosition.x;
-		const q = checkInfinity(1 / cameraPosition.y) ? 0 : 1 / cameraPosition.y;
-		const r = checkInfinity(1 / cameraPosition.z) ? 0 : 1 / cameraPosition.z;
-
-		const projectionMatrix = math.matrix([
-			[1, 0, 0, p],
-			[0, 1, 0, q],
-			[0, 0, 1, r],
-			[0, 0, 0, 1]
-		]);
-
-		return this.matrixService.multiply(matrix, projectionMatrix);
+	project(matrix, camera) {
+		const projection = this.matrixService.getProjectionMatrix(camera);
+		return this.matrixService.multiply(matrix, projection);
 	}
 
-	getMVP(model, scene) {
-		model.matrix = this.rotate(model.matrix, model.rotation);
-		model.matrix = this.translate(model.matrix, model.position);
-		const sceneMatrix = this.translate(scene.matrix, scene.position);
-		model.matrix = this.matrixService.multiply(model.matrix, sceneMatrix);
+	view(matrix, camera) {
+		let result = this.rotate(matrix, camera.rotation.reverse());
+		result = this.translate(result, camera.position.reverse());
+		return result;
+	}
 
-		return model.matrix;
+	trasformation(matrix, model) {
+		let result = this.scale(matrix, model.scale);
+		result = this.rotate(result, model.rotation);
+		result = this.translate(result, model.position);
+		return result;
+	}
+
+	world(model, world) {
+		const result = this.matrixService.multiply(model.matrix, world.matrix);
+		return result;
+	}
+
+	getMVP(model, world, camera) {
+		const modelToWorldMatrix = this.world(model, world);
+		const viewMatrix = this.view(this.primary(), camera);
+		const viewModelMatrix = this.matrixService.multiply(viewMatrix, modelToWorldMatrix);
+		const ModelViewProjection = this.matrixService.multiply(
+			camera.projectionMatrix,
+			viewModelMatrix
+		);
+		console.log(viewModelMatrix, camera.projectionMatrix);
+		// model.matrix = this.project(model.matrix, camera);
+
+		return ModelViewProjection;
 	}
 
 	// getProjectionCanvas(position) {

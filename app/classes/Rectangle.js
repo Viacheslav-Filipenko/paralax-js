@@ -4,10 +4,8 @@ export default class Rectangle extends Object3D {
 	constructor(obj) {
 		super(obj.transformation);
 		this.properties = obj.properties;
-
-		this.leftTop = obj.leftTop;
-		this.leftBottom = obj.leftBottom;
-		this.rightTop = obj.rightTop;
-		this.rightBottom = obj.rightBottom;
+	}
+	toWorld(world) {
+		this.matrix = super.toWorld(this, world);
 	}
 }
