@@ -2,11 +2,11 @@ export default class Html {
 	constructor() {}
 
 	getStylesOfMatrix(matrix) {
-		let result = '';
-		matrix.forEach(value => {
-			result += `${value},`;
+		const cssMatrix = [[], [], [], []];
+		matrix.forEach((value, index) => {
+			cssMatrix[index[1]].push(value);
 		});
-		return result.slice(0, -1);
+		return cssMatrix.toString();
 	}
 
 	setStyles(element, styles) {

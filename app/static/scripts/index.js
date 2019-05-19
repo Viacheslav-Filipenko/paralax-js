@@ -22,7 +22,7 @@ const camera = new Camera({
 
 const a = new Rectangle({
 	transformation: {
-		position: { x: 0, y: 0, z: 0 },
+		position: { x: 0, y: 0, z: 30 },
 		rotation: { x: 0 }
 	},
 	properties: {

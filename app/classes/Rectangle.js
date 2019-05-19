@@ -5,7 +5,4 @@ export default class Rectangle extends Object3D {
 		super(obj.transformation);
 		this.properties = obj.properties;
 	}
-	toWorld(world) {
-		this.matrix = super.toWorld(this, world);
-	}
 }

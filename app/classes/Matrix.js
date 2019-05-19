@@ -1,6 +1,6 @@
 import { toRadians, checkInfinity } from '../utils/Math.js';
 
-export default class Matrix {
+export default class MatrixService {
 	constructor() {}
 
 	getPrimaryMatrix() {
@@ -24,15 +24,6 @@ export default class Matrix {
 			[0, 0, 0, 1]
 		]);
 	}
-
-	// getTransfomationMatrix(transformXAxis, transformYAxis, transformZAxis, translation) {
-	// 	return math.matrix([
-	// 		[transformXAxis.x, transformXAxis.y, transformXAxis.z, 0],
-	// 		[transformYAxis.x, transformYAxis.y, transformYAxis.z, 0],
-	// 		[transformZAxis.x, transformZAxis.y, transformZAxis.z, 0],
-	// 		[translation.x, translation.y, translation.z, 1]
-	// 	]);
-	// }
 
 	multiply(...matrix) {
 		let result = matrix[0];

@@ -22,12 +22,11 @@ export default class Scene extends Object3D {
 			backgroundColor: 'black',
 			width: '1000px',
 			height: '1800px',
-			perspective: `${0}px`,
 			perspectiveOrigin: '0%, 0%'
 		});
 
 		this.models.forEach(model => {
-			const element = this.renderer.html.render('div', { ...model.properties });
+			const element = this.renderer.html.render('div', model.properties);
 
 			const matrix = this.graphic.getMVP(model, this, camera);
 

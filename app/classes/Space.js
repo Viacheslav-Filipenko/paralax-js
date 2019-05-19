@@ -9,10 +9,3 @@ export default class Space {
 		parent.appendChild(scene);
 	}
 }
-
-/* matrix3d(
-	2, 0, 0, 0,
- 	0, 2, 0, 0,
-	0, 0, 8.9798,-2.0202,
-	0, 0, -1, 0)
- */
