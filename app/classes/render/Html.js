@@ -15,6 +15,21 @@ export default class Html {
 		});
 	}
 
+	renderDebugNode(target) {
+		const props = target.getBoundingClientRect();
+		const styles = {
+			border: '1px solid green',
+			position: 'fixed',
+			width: `${props.width}px`,
+			height: `${props.height}px`,
+			left: `${props.left}px`,
+			top: `${props.top}px`
+		};
+		const element = document.createElement('div');
+		this.setStyles(element, styles);
+		document.querySelector('body').appendChild(element);
+	}
+
 	render(type, styles) {
 		const element = document.createElement(type);
 		this.setStyles(element, styles);

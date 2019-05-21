@@ -7,18 +7,16 @@ export default class Camera {
 
 		this.position = new Vector(obj.position, 0);
 		this.rotation = new Vector(obj.rotation, 0);
-		this.scale = new Vector({}, 1);
+		this.scale = new Vector(obj.scale, 1);
 
-		this.top = obj.top;
-		this.bottom = obj.bottom;
-		this.left = obj.left;
-		this.right = obj.right;
-
-		this.near = obj.near || 1;
-		this.far = obj.far || 10;
+		this.perspective = obj.perspective;
 
 		this._viewMatrix = this.graphic.view(this);
 		this._projectionMatrix = this.graphic.project(this);
+	}
+
+	updateView() {
+		this._viewMatrix = this.graphic.view(this);
 	}
 
 	get viewMatrix() {

@@ -10,28 +10,34 @@ const scene = new Scene({
 });
 
 const camera = new Camera({
-	position: { x: 0, y: 0, z: 20 },
+	position: { x: 0, y: 0, z: 1000 },
 	rotation: { x: 0, y: 0, z: 0 },
-	far: 100,
-	near: 1,
-	left: -1,
-	right: 1,
-	top: 1,
-	bottom: -1
+	perspective: 1000
 });
 
 const a = new Rectangle({
 	transformation: {
-		position: { x: 0, y: 0, z: 30 },
-		rotation: { x: 0 }
+		position: { x: 100, y: 0, z: -1000 },
+		rotation: { x: 0, y: 0, z: 0 }
 	},
 	properties: {
-		width: '100px',
-		height: '100px'
+		width: '200px',
+		height: '200px'
 	}
 });
 
-scene.add(a);
+const b = new Rectangle({
+	transformation: {
+		position: { x: 200, y: 0, z: -800 },
+		rotation: { x: 0, y: 0, z: 0 }
+	},
+	properties: {
+		width: '400px',
+		height: '400px'
+	}
+});
+
+scene.add(a, b);
 
 const space = new Space(scene, camera);
 

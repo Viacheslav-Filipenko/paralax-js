@@ -37,7 +37,8 @@ export default class Graphic {
 	}
 
 	view(camera) {
-		const result = this.rotate(this.primary(), camera.rotation.reverse());
+		const scale = this.scale(this.primary(), camera.scale);
+		const result = this.rotate(scale, camera.rotation.reverse());
 		return this.translate(result, camera.position.reverse());
 	}
 
@@ -53,14 +54,10 @@ export default class Graphic {
 	}
 
 	getMVP(model, world, camera) {
-		const modelToWorldMatrix = this.world(model, world);
+		const modelToWorld = this.multiply(model.matrix, world.matrix);
 
-		const viewModelMatrix = this.multiply(camera.viewMatrix, modelToWorldMatrix);
+		const modelToView = this.multiply(camera.viewMatrix, modelToWorld);
 
-		const ModelViewProjection = this.multiply(camera.projectionMatrix, viewModelMatrix);
-
-		console.log(ModelViewProjection);
-
-		return ModelViewProjection;
+		return modelToView;
 	}
 }

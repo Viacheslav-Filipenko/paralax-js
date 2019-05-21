@@ -36,6 +36,19 @@ export default class MatrixService {
 	}
 
 	getProjectionMatrix(camera) {
+		// const angle = toRadians(camera.fov);
+
+		// return math.matrix([
+		// 	[1 / Math.tan(angle / 2), 0, 0, 0],
+		// 	[0, 1 / Math.tan(angle / 2), 0, 0],
+		// 	[
+		// 		0,
+		// 		0,
+		// 		-(camera.near + camera.far) / (camera.far - camera.near),
+		// 		(-2 * camera.far * camera.near) / (camera.far - camera.near)
+		// 	],
+		// 	[0, 0, -1, 0]
+		// ]);
 		return math.matrix([
 			[
 				(camera.near * 2) / (camera.right - camera.left),
@@ -64,8 +77,8 @@ export default class MatrixService {
 		if (axis.toLowerCase() === 'x') {
 			return math.matrix([
 				[1, 0, 0, 0],
-				[0, Math.cos(angle), Math.sin(angle), 0],
-				[0, -Math.sin(angle), Math.cos(angle), 0],
+				[0, Math.cos(angle), -Math.sin(angle), 0],
+				[0, Math.sin(angle), Math.cos(angle), 0],
 				[0, 0, 0, 1]
 			]);
 		}
@@ -81,8 +94,8 @@ export default class MatrixService {
 
 		if (axis.toLowerCase() === 'z') {
 			return math.matrix([
-				[Math.cos(angle), Math.sin(angle), 0, 0],
-				[-Math.sin(angle), Math.cos(angle), 0, 0],
+				[Math.cos(angle), -Math.sin(angle), 0, 0],
+				[Math.sin(angle), Math.cos(angle), 0, 0],
 				[0, 0, 1, 0],
 				[0, 0, 0, 1]
 			]);
