@@ -1,4 +1,4 @@
-import { toRadians, checkInfinity } from '../utils/Math.js';
+import { toRadians } from '../utils/Math.js';
 
 export default class MatrixService {
 	constructor() {}
@@ -36,19 +36,6 @@ export default class MatrixService {
 	}
 
 	getProjectionMatrix(camera) {
-		// const angle = toRadians(camera.fov);
-
-		// return math.matrix([
-		// 	[1 / Math.tan(angle / 2), 0, 0, 0],
-		// 	[0, 1 / Math.tan(angle / 2), 0, 0],
-		// 	[
-		// 		0,
-		// 		0,
-		// 		-(camera.near + camera.far) / (camera.far - camera.near),
-		// 		(-2 * camera.far * camera.near) / (camera.far - camera.near)
-		// 	],
-		// 	[0, 0, -1, 0]
-		// ]);
 		return math.matrix([
 			[
 				(camera.near * 2) / (camera.right - camera.left),

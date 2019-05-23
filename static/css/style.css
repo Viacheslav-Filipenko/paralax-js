@@ -8,19 +8,3 @@ body {
     width: 100vw;
     height: 100vh;
 }
-
-.black {
-    background-color: black;
-}
-
-.grey {
-    background-color: gray;
-}
-
-.green {
-    background-color: rgb(70, 151, 70);
-}
-
-.yellow {background-color: rgb(206, 180, 94);}
-
-.red {background-color: rgb(230, 79, 79);}

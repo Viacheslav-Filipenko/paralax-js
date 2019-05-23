@@ -53,7 +53,8 @@ export default class Scene extends Object3D {
 				transformOrigin: 'top left',
 				backgroundImage: `url(${urls[index]})`,
 				backgroundRepeat: 'no-repeat',
-				backgroundSize: 'contain'
+				backgroundSize: 'contain',
+				transition: 'all 0.1s'
 			});
 
 			const matrix = this.graphic.getMVP(model, this, camera);
@@ -76,54 +77,6 @@ export default class Scene extends Object3D {
 			this.renderer.html.setStyles(this.renderer.elements[index], {
 				transform: `matrix3d(${this.renderer.html.getStylesOfMatrix(matrix)})`
 			});
-		});
-	}
-
-	keyUp(camera) {
-		document.addEventListener('keydown', event => {
-			if (event.which !== 38) return;
-
-			const counter = 10;
-
-			camera.position.z += counter;
-			camera.updateView();
-			this.updateModels(camera);
-		});
-	}
-
-	keyDown(camera) {
-		document.addEventListener('keydown', event => {
-			if (event.which !== 40) return;
-
-			const counter = -10;
-
-			camera.position.z += counter;
-			camera.updateView();
-			this.updateModels(camera);
-		});
-	}
-
-	rotateXY(camera) {
-		document.addEventListener('keydown', event => {
-			if (event.which !== 81 && event.which !== 69) return;
-
-			const counter = event.keyCode === 81 ? 1 : -1;
-
-			camera.rotation.y += counter;
-			camera.updateView();
-			this.updateModels(camera);
-		});
-	}
-
-	keydown(camera) {
-		document.addEventListener('keydown', event => {
-			if (event.which !== 37 && event.which !== 39) return;
-
-			const counter = event.keyCode === 37 ? -3 : 3;
-
-			camera.position.x += counter;
-			camera.updateView();
-			this.updateModels(camera);
 		});
 	}
 }

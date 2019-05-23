@@ -19,10 +19,17 @@ export default class Graphic {
 	}
 
 	rotate(matrix, rotation) {
-		Object.keys(rotation).forEach(axios => {
-			const rotationMatrix = this.matrixService.getRotationMatrix(axios, rotation[axios]);
-			matrix = this.multiply(matrix, rotationMatrix);
-		});
+		Object.keys(rotation)
+			.reverse()
+			.forEach(axios => {
+				const rotationMatrix = this.matrixService.getRotationMatrix(axios, rotation[axios]);
+
+				if (axios === 'z') {
+					matrix = this.multiply(matrix, math.transpose(rotationMatrix));
+				} else {
+					matrix = this.multiply(matrix, rotationMatrix);
+				}
+			});
 		return matrix;
 	}
 
