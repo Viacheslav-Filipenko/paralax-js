@@ -1,5 +1,8 @@
 import Render from './Render.js';
 import Object3D from '../classes/Object3D.js';
+import Graphic from './Graphic.js';
+
+const graphic = new Graphic();
 
 export default class Scene extends Object3D {
 	constructor(obj) {
@@ -38,20 +41,13 @@ export default class Scene extends Object3D {
 	}
 
 	renderModels(camera, container) {
-		const urls = [
-			'http://www.stickpng.com/assets/images/580b57fcd9996e24bc43c28a.png',
-			'http://pngriver.com/wp-content/uploads/2018/04/Download-Camel-PNG-3.png',
-			'https://ru.ashesofcreation.wiki/images/thumb/3/3c/Hawk.png/450px-Hawk.png',
-			'http://virtualgameinfo.ru/wp-content/uploads/2017/10/Assassin---s-Creed-Origins-Location-Tombs.jpg'
-		];
-
-		this.models.forEach((model, index) => {
+		this.models.forEach(model => {
 			const element = this.renderer.html.render('div', {
 				...model.properties,
 				position: 'absolute',
-				zIndex: model.position.z,
+				zIndex: model.position.z * camera.getDirection(camera.viewMatrix).forward.z,
 				transformOrigin: 'top left',
-				backgroundImage: `url(${urls[index]})`,
+				backgroundImage: `url(${model.src})`,
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'contain',
 				transition: 'all 0.1s'
@@ -62,6 +58,10 @@ export default class Scene extends Object3D {
 			this.renderer.html.setStyles(element, {
 				transform: `matrix3d(${this.renderer.html.getStylesOfMatrix(matrix)})`
 			});
+
+			this.renderer.html.setClass(element, model.classList);
+
+			model.ViewAngleChange(element, model);
 
 			this.renderer.elements.push(element);
 			container.appendChild(element);
@@ -74,8 +74,15 @@ export default class Scene extends Object3D {
 		this.models.forEach((model, index) => {
 			const matrix = this.graphic.getMVP(model, this, camera);
 
+			model.getAngle(camera);
+
+			const { x, y, z } = model.getAngleToCamera(camera);
+			const k = (x > 90 || y > 90) && x !== y && z !== 0 ? -1 : 1;
+
+			model.ViewAngleChange(this.renderer.elements[index], model);
 			this.renderer.html.setStyles(this.renderer.elements[index], {
-				transform: `matrix3d(${this.renderer.html.getStylesOfMatrix(matrix)})`
+				transform: `matrix3d(${this.renderer.html.getStylesOfMatrix(matrix)})`,
+				zIndex: graphic.getPosition(model.matrix).z * k
 			});
 		});
 	}

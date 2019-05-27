@@ -7,22 +7,18 @@ export default class MatrixService {
 		return math.matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
 	}
 
-	getScaleMatrix(vector) {
-		return math.matrix([
-			[vector.x, 0, 0, 0],
-			[0, vector.y, 0, 0],
-			[0, 0, vector.z, 0],
-			[0, 0, 0, 1]
-		]);
+	getScaleMatrix(vector = {}) {
+		const x = vector.x || 1;
+		const y = vector.y || 1;
+		const z = vector.z || 1;
+		return math.matrix([[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]]);
 	}
 
-	getTranslationMatrix(vector) {
-		return math.matrix([
-			[1, 0, 0, vector.x],
-			[0, 1, 0, vector.y],
-			[0, 0, 1, vector.z],
-			[0, 0, 0, 1]
-		]);
+	getTranslationMatrix(vector = {}) {
+		const x = vector.x || 0;
+		const y = vector.y || 0;
+		const z = vector.z || 0;
+		return math.matrix([[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]]);
 	}
 
 	multiply(...matrix) {
@@ -35,58 +31,42 @@ export default class MatrixService {
 		return result;
 	}
 
-	getProjectionMatrix(camera) {
+	getRotationMatrixX(angle = 0) {
+		const angleX = toRadians(angle);
+
 		return math.matrix([
-			[
-				(camera.near * 2) / (camera.right - camera.left),
-				0,
-				(camera.right + camera.left) / (camera.right - camera.left),
-				0
-			],
-			[
-				0,
-				(camera.near * 2) / (camera.top - camera.bottom),
-				(camera.top + camera.bottom) / (camera.top - camera.bottom),
-				0
-			],
-			[
-				0,
-				0,
-				-(camera.far + camera.near) / (camera.far - camera.near),
-				(-2 * camera.far * camera.near) / (camera.far - camera.near)
-			],
-			[0, 0, -1, 0]
+			[1, 0, 0, 0],
+			[0, Math.cos(angleX), -Math.sin(angleX), 0],
+			[0, Math.sin(angleX), Math.cos(angleX), 0],
+			[0, 0, 0, 1]
 		]);
 	}
-	getRotationMatrix(axis, angle) {
-		angle = toRadians(angle);
+	getRotationMatrixY(angle = 0) {
+		const angleY = toRadians(angle);
 
-		if (axis.toLowerCase() === 'x') {
-			return math.matrix([
-				[1, 0, 0, 0],
-				[0, Math.cos(angle), -Math.sin(angle), 0],
-				[0, Math.sin(angle), Math.cos(angle), 0],
-				[0, 0, 0, 1]
-			]);
-		}
+		return math.matrix([
+			[Math.cos(angleY), 0, Math.sin(angleY), 0],
+			[0, 1, 0, 0],
+			[-Math.sin(angleY), 0, Math.cos(angleY), 0],
+			[0, 0, 0, 1]
+		]);
+	}
+	getRotationMatrixZ(angle = 0) {
+		const angleZ = toRadians(angle);
 
-		if (axis.toLowerCase() === 'y') {
-			return math.matrix([
-				[Math.cos(angle), 0, Math.sin(angle), 0],
-				[0, 1, 0, 0],
-				[-Math.sin(angle), 0, Math.cos(angle), 0],
-				[0, 0, 0, 1]
-			]);
-		}
+		return math.matrix([
+			[Math.cos(angleZ), -Math.sin(angleZ), 0, 0],
+			[Math.sin(angleZ), Math.cos(angleZ), 0, 0],
+			[0, 0, 1, 0],
+			[0, 0, 0, 1]
+		]);
+	}
 
-		if (axis.toLowerCase() === 'z') {
-			return math.matrix([
-				[Math.cos(angle), -Math.sin(angle), 0, 0],
-				[Math.sin(angle), Math.cos(angle), 0, 0],
-				[0, 0, 1, 0],
-				[0, 0, 0, 1]
-			]);
-		}
+	getRotationMatrix(axis, angle = 0) {
+		if (axis.toLowerCase() === 'x') return this.getRotationMatrixX(angle);
+		if (axis.toLowerCase() === 'y') return this.getRotationMatrixY(angle);
+		if (axis.toLowerCase() === 'z') return this.getRotationMatrixZ(angle);
+
 		return null;
 	}
 }

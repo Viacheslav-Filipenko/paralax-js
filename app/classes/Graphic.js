@@ -1,4 +1,5 @@
 import MatrixService from './Matrix.js';
+import Vector from './Vector.js';
 
 export default class Graphic {
 	constructor() {
@@ -9,62 +10,111 @@ export default class Graphic {
 		return this.matrixService.getPrimaryMatrix();
 	}
 
-	scale(matrix, vector) {
-		const scaleMatrix = this.matrixService.getScaleMatrix(vector);
-		return this.multiply(matrix, scaleMatrix);
+	scale(vector) {
+		return this.matrixService.getScaleMatrix(vector);
+	}
+
+	scaleX(x = 1) {
+		return this.matrixService.getScaleMatrix({ x });
+	}
+
+	scaleY(y = 1) {
+		return this.matrixService.getScaleMatrix({ y });
+	}
+
+	scaleZ(z = 1) {
+		return this.matrixService.getScaleMatrix({ z });
 	}
 
 	multiply(...matrix) {
 		return this.matrixService.multiply(...matrix);
 	}
 
-	rotate(matrix, rotation) {
+	rotate(rotation) {
+		let matrix = this.primary();
+
 		Object.keys(rotation)
 			.reverse()
 			.forEach(axios => {
 				const rotationMatrix = this.matrixService.getRotationMatrix(axios, rotation[axios]);
 
-				if (axios === 'z') {
-					matrix = this.multiply(matrix, math.transpose(rotationMatrix));
-				} else {
-					matrix = this.multiply(matrix, rotationMatrix);
-				}
+				matrix = this.multiply(matrix, rotationMatrix);
 			});
 		return matrix;
 	}
 
-	translate(matrix, vector) {
-		const translationMatrix = this.matrixService.getTranslationMatrix(vector);
-		return this.multiply(matrix, translationMatrix);
+	rotateX(angle = 0) {
+		const rotationMatrix = this.matrixService.getRotationMatrix('x', angle);
+		return this.multiply(this.primary(), rotationMatrix);
 	}
 
-	project(camera) {
-		const projection = this.matrixService.getProjectionMatrix(camera);
-		return projection;
+	rotateY(angle = 0) {
+		const rotationMatrix = this.matrixService.getRotationMatrix('y', angle);
+		return this.multiply(this.primary(), rotationMatrix);
 	}
 
-	view(camera) {
-		const scale = this.scale(this.primary(), camera.scale);
-		const result = this.rotate(scale, camera.rotation.reverse());
-		return this.translate(result, camera.position.reverse());
+	rotateZ(angle = 0) {
+		const rotationMatrix = this.matrixService.getRotationMatrix('z', angle);
+		return this.multiply(this.primary(), rotationMatrix);
 	}
 
-	trasformation(model) {
-		let result = this.scale(this.primary(), model.scale);
-		result = this.rotate(result, model.rotation);
-		result = this.translate(result, model.position);
-		return result;
+	translate(vector) {
+		return this.matrixService.getTranslationMatrix(vector);
 	}
 
-	world(model, world) {
-		return this.multiply(model.matrix, world.matrix);
+	trasform(model) {
+		let result = this.primary();
+		result = this.multiply(result, model._scaleMatrix);
+		result = this.multiply(result, model._rotationMatrix);
+		return this.multiply(result, model._translationMatrix);
+	}
+
+	getDirection(matrix) {
+		const right = this.getDirectionRight(matrix);
+		const up = this.getDirectionUp(matrix);
+		const forward = this.getDirectionForward(matrix);
+		return { right, up, forward };
+	}
+
+	getPosition(matrix) {
+		const _matrix = matrix._data;
+		const x = _matrix[0][3];
+		const y = _matrix[1][3];
+		const z = _matrix[2][3];
+
+		return { x, y, z };
+	}
+
+	getDirectionRight(matrix) {
+		const _matrix = matrix._data;
+		return new Vector({
+			x: _matrix[0][0],
+			y: _matrix[1][0],
+			z: _matrix[2][0]
+		});
+	}
+
+	getDirectionUp(matrix) {
+		const _matrix = matrix._data;
+		return new Vector({
+			x: _matrix[0][1],
+			y: _matrix[1][1],
+			z: _matrix[2][1]
+		});
+	}
+
+	getDirectionForward(matrix) {
+		const _matrix = matrix._data;
+		return new Vector({
+			x: _matrix[0][2],
+			y: _matrix[1][2],
+			z: _matrix[2][2]
+		});
 	}
 
 	getMVP(model, world, camera) {
 		const modelToWorld = this.multiply(model.matrix, world.matrix);
-
 		const modelToView = this.multiply(camera.viewMatrix, modelToWorld);
-
 		return modelToView;
 	}
 }

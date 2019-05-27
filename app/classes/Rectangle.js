@@ -4,5 +4,19 @@ export default class Rectangle extends Object3D {
 	constructor(obj) {
 		super(obj.transformation);
 		this.properties = obj.properties;
+		this.classList = obj.classList;
+		this.src = obj.src;
+	}
+
+	getAngle(camera) {
+		super.getAngleToCamera(camera);
+	}
+
+	onViewAngleChange(callback) {
+		super.onViewAngleChange(callback);
+	}
+
+	getPosition() {
+		return super.getPosition();
 	}
 }
