@@ -35,7 +35,6 @@ export default class Object3D {
 		const z = this.getAngleToCameraZ(camera);
 
 		this.ViewAngle = { x, y, z };
-		console.log(this.ViewAngle);
 
 		return this.ViewAngle;
 	}

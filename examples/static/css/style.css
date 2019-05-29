@@ -1,0 +1,26 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#scene {
+    width: 100vw;
+    height: 100vh;
+}
+
+.sprite {
+
+    background-size: inherit !important;
+    /* background-position-x: 10px, 100px; */
+}.black {
+    background-color: rgb(238, 180, 20) !important;
+}
+
+.gray {
+    background-color: #ccc!important;
+}
+
+.red {
+    background-color: rgb(190, 78, 78)!important;
+}

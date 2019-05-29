@@ -6,6 +6,7 @@ export default class Rectangle extends Object3D {
 		this.properties = obj.properties;
 		this.classList = obj.classList;
 		this.src = obj.src;
+		this.type = obj.type;
 	}
 
 	getAngle(camera) {

@@ -2,7 +2,6 @@ import Graphic from './Graphic.js';
 import Vector from './Vector.js';
 
 export default class Camera {
-	#viewMatrix;
 	constructor(obj) {
 		this.graphic = new Graphic();
 
@@ -11,15 +10,15 @@ export default class Camera {
 		this._scaleMatrix = this.graphic.scale(new Vector(obj.scale, 1));
 
 		this.perspective = obj.perspective;
-		this.#viewMatrix = this.view();
+		this._viewMatrix = this.view();
 	}
 
 	updateView() {
-		this.#viewMatrix = this.view();
+		this._viewMatrix = this.view();
 	}
 
 	get viewMatrix() {
-		return this.#viewMatrix;
+		return this._viewMatrix;
 	}
 
 	rotate(x = 0, y = 0, z = 0) {
@@ -93,29 +92,15 @@ export default class Camera {
 	}
 
 	scale(x = 1, y = 1, z = 1) {
-		this.scaleX(x);
-		this.scaleY(y);
-		this.scaleZ(z);
-	}
-
-	scaleX(x = 1) {
-		this.#viewMatrix = this.graphic.multiply(this.#viewMatrix, this.graphic.scaleX(x));
-	}
-
-	scaleY(y = 1) {
-		this.#viewMatrix = this.graphic.multiply(this.#viewMatrix, this.graphic.scaleY(y));
-	}
-
-	scaleZ(z = 1) {
-		this.#viewMatrix = this.graphic.multiply(this.#viewMatrix, this.graphic.scaleZ(z));
+		this._scaleMatrix = this.graphic.scale({ x, y, z });
 	}
 
 	getDirection() {
-		return this.graphic.getDirection(this.#viewMatrix);
+		return this.graphic.getDirection(this._viewMatrix);
 	}
 
 	getPosition() {
-		return this.graphic.getPosition(this.#viewMatrix);
+		return this.graphic.getPosition(this._viewMatrix);
 	}
 
 	view() {

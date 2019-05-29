@@ -14,3 +14,19 @@ body {
     background-size: inherit !important;
     /* background-position-x: 10px, 100px; */
 }
+
+.rectangle {
+    position: absolute;
+}
+
+.black {
+    background-color: rgb(36, 36, 36) !important;
+}
+
+.gray {
+    background-color: #ccc!important;
+}
+
+.red {
+    background-color: rgb(190, 78, 78)!important;
+}

@@ -12,11 +12,16 @@ const setStyles = (element, styles) => {
 
 const callback = (element, model) => {
 	if (!element.classList.contains('sprite')) return;
-	if (model.ViewAngle.z < 45) {
+	const angleZ = model.ViewAngle.z;
+	const angleX = model.ViewAngle.x;
+
+	const angle = angleX > angleZ ? angleZ : angleX;
+
+	if (angle < 45) {
 		setStyles(element, {
 			backgroundPositionX: `0px`
 		});
-	} else if (model.ViewAngle.z > 45 && model.ViewAngle.z < 135) {
+	} else if (angle > 45 && angle < 135) {
 		setStyles(element, {
 			backgroundPositionX: `-410px`
 		});
