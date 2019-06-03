@@ -1,6 +1,7 @@
 import Render from './Render.js';
 import Object3D from './Object3D.js';
 import Graphic from './Graphic.js';
+import { getClientHeight, getClientWidth } from '../utils/browser.js';
 
 const graphic = new Graphic();
 
@@ -11,12 +12,19 @@ export default class Scene extends Object3D {
 		this.renderer = new Render();
 		this.models = [];
 		this.container = null;
+		this.proprtion = obj.proportion || {};
+		this.animationTime = obj.animationTime || 0;
 	}
 
 	add(...models) {
 		models.forEach(model => {
 			this.models.push(model);
 		});
+	}
+
+	getScaleWidth() {
+		const k = (getClientHeight() / this.proprtion.height).toFixed(0);
+		return Math.max(getClientWidth(), k * this.proprtion.width);
 	}
 
 	render(camera) {
@@ -30,6 +38,9 @@ export default class Scene extends Object3D {
 			width: '100vw',
 			height: '100vh'
 		});
+
+		const k = this.getScaleWidth() / 1980;
+		camera.scale(k, k, k);
 
 		this.container = scene;
 
@@ -49,8 +60,8 @@ export default class Scene extends Object3D {
 				...model.properties,
 				position: 'absolute',
 				zIndex: model.position.z * camera.getDirection(camera.viewMatrix).forward.z,
-				transformOrigin: 'top left'
-				// transition: 'all 1s'
+				transformOrigin: 'top left',
+				transition: `all ${this.animationTime}s`
 			});
 
 			if (model.src !== undefined) element.setAttribute('src', model.src);
@@ -81,7 +92,8 @@ export default class Scene extends Object3D {
 			model.ViewAngleChange(this.renderer.elements[index], model);
 			this.renderer.html.setStyles(this.renderer.elements[index], {
 				transform: `matrix3d(${this.renderer.html.getStylesOfMatrix(matrix)})`,
-				zIndex: graphic.getPosition(model.matrix).z
+				zIndex: graphic.getPosition(model.matrix).z,
+				transition: `all ${this.animationTime}s`
 			});
 		});
 	}

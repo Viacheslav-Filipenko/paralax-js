@@ -48,12 +48,13 @@ models.clouds = new Rectangle({
 
 models.sky = new Rectangle({
 	transformation: {
-		position: { x: -8500, y: -7900, z: -10000 },
-		rotation: { x: 0, y: 0, z: 0 }
+		position: { x: -1000, y: -800, z: -1000 },
+		rotation: { x: 0, y: 0, z: 0 },
+		scale: { x: 10, y: 10, z: 10 }
 	},
 	properties: {
-		width: '21753px',
-		height: '14880px'
+		width: '2175px',
+		height: '1488px'
 	},
 	src: '../img/Sky.svg',
 	type: 'img'
@@ -205,11 +206,19 @@ const modelsObjects = Object.values(models);
 const scene = new Scene({
 	transformation: {
 		position: { x: 0, y: 0, z: 0 }
-	}
+	},
+	proportion: {
+		width: 16,
+		height: 9
+	},
+	animationTime: 0 //0.1
 });
 
 const getWidth = () => {
 	return window.document.documentElement.clientWidth;
+};
+export const getClientHeight = () => {
+	return window.document.documentElement.clientHeight;
 };
 
 const camera = new Camera({
@@ -260,9 +269,7 @@ document.addEventListener('keydown', event => {
 });
 
 window.addEventListener('resize', event => {
-	console.log(getWidth());
-
-	const s = getWidth() / 1980;
+	const s = space.scene.getScaleWidth() / 1980;
 
 	space.camera.scale(s, s, s);
 
@@ -270,21 +277,75 @@ window.addEventListener('resize', event => {
 	space.scene.updateModels(space.camera);
 });
 
+let isAnimated = false;
+
+let counterScroll = 0;
+
 document.addEventListener('mousewheel', event => {
-	const distance = event.deltaY > 0 ? 300 : -300;
+	// if (isAnimated) return;
+	isAnimated = true;
+
+	const distance = event.deltaY > 0 ? 1000 : -1000;
+
+	if (counterScroll + distance < 0 || counterScroll + distance > 5000) return;
+
+	counterScroll += distance;
+
+	// space.scene.animationTime = 1;
+
 	space.camera.translateZ(-distance);
 
 	space.camera.updateView();
 	space.scene.updateModels(space.camera);
+
+	// setTimeout(() => {
+	// 	isAnimated = false;
+	// }, space.scene.animationTime * 1000);
 });
 
-const change = event => {
-	const x = event.movementY;
-	const y = event.movementX;
+let counterX = 0;
+let counterY = 0;
 
-	space.camera.rotate(x, y, 0);
+let isAnimated2 = false;
+
+document.addEventListener('mousemove', event => {
+	//if (isAnimated2) return;
+	const x = event.clientX - (getWidth() / 2).toFixed(0);
+	const y = event.clientY - (getClientHeight() / 2).toFixed(0);
+
+	const deltaX = counterX - x;
+	const deltaY = counterY - y;
+
+	const persentsDeviationX = 100 * (deltaX / getWidth());
+	const persentsDeviationY = 100 * (deltaY / getClientHeight());
+
+	//space.scene.animationTime = 0.6;
+
+	// space.camera.translateX(counterX);
+	space.camera.translateX(persentsDeviationX);
+	//counterX = -x;
+	// space.camera.translateY(counterY);
+	space.camera.translateY(persentsDeviationY);
+	//counterY = -y;
+
 	space.camera.updateView();
 	space.scene.updateModels(space.camera);
-};
 
-grabbing(change);
+	counterX = x;
+	counterY = y;
+	console.log('calclated:', x, y);
+	// setTimeout(() => {
+	// 	isAnimated2 = false;
+	// }, space.scene.animationTime * 1000);
+});
+
+// const change = event => {
+// 	const x = event.movementY % 10;
+// 	const y = event.movementX % 10;
+
+// 	space.camera.rotate(x, y, 0);
+// 	space.camera.updateView();
+// 	space.scene.updateModels(space.camera);
+// };
+
+// grabbing(change);

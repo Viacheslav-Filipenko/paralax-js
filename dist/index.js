@@ -610,6 +610,13 @@ var paralax = (function (exports) {
     return Object3D;
   }();
 
+  var getClientWidth = function getClientWidth() {
+    return window.document.documentElement.clientWidth;
+  };
+  var getClientHeight = function getClientHeight() {
+    return window.document.documentElement.clientHeight;
+  };
+
   var graphic = new Graphic();
 
   var Scene =
@@ -627,6 +634,8 @@ var paralax = (function (exports) {
       _this.renderer = new Render();
       _this.models = [];
       _this.container = null;
+      _this.proprtion = obj.proportion || {};
+      _this.animationTime = obj.animationTime || 0;
       return _this;
     }
 
@@ -644,6 +653,12 @@ var paralax = (function (exports) {
         });
       }
     }, {
+      key: "getScaleWidth",
+      value: function getScaleWidth() {
+        var k = (getClientHeight() / this.proprtion.height).toFixed(0);
+        return Math.max(getClientWidth(), k * this.proprtion.width);
+      }
+    }, {
       key: "render",
       value: function render(camera) {
         var scene = this.renderer.html.render('div', {
@@ -656,6 +671,8 @@ var paralax = (function (exports) {
           width: '100vw',
           height: '100vh'
         });
+        var k = this.getScaleWidth() / 1980;
+        camera.scale(k, k, k);
         this.container = scene;
         var point = this.renderer.html.render('div', {
           backgroundColor: 'white',
@@ -675,8 +692,8 @@ var paralax = (function (exports) {
           var element = _this3.renderer.html.render(model.type, _objectSpread({}, model.properties, {
             position: 'absolute',
             zIndex: model.position.z * camera.getDirection(camera.viewMatrix).forward.z,
-            transformOrigin: 'top left' // transition: 'all 1s'
-
+            transformOrigin: 'top left',
+            transition: "all ".concat(_this3.animationTime, "s")
           }));
 
           if (model.src !== undefined) element.setAttribute('src', model.src);
@@ -710,7 +727,8 @@ var paralax = (function (exports) {
 
           _this4.renderer.html.setStyles(_this4.renderer.elements[index], {
             transform: "matrix3d(".concat(_this4.renderer.html.getStylesOfMatrix(matrix), ")"),
-            zIndex: graphic.getPosition(model.matrix).z
+            zIndex: graphic.getPosition(model.matrix).z,
+            transition: "all ".concat(_this4.animationTime, "s")
           });
         });
       }
